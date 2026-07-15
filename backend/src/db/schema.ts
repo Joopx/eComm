@@ -72,7 +72,7 @@ export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert ;  //undefined , and optional fields
 
 export type Comment = typeof comments.$inferSelect;
-export type NewXOmment = typeof comments.$inferInsert;
+export type NewComment = typeof comments.$inferInsert;
 
 export type Product = typeof products.$inferSelect;
 export type NewProduct = typeof products.$inferInsert;
