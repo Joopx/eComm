@@ -5,7 +5,7 @@
 //   SignedOut,
 // } from "@clerk/clerk-react";
 import { Routes, Route } from "react-router-dom";
-
+import { Navigate } from "react-router-dom";
 import Navbar from "./compnents/Navbar";
 import ProductPage from "./pages/ProductPage";
 import ProfilePage from "./pages/ProfilePage";
@@ -20,7 +20,7 @@ import HomePage from "./pages/HomePage"
 
 function App() {
 
-  const {isClerkLoaded} = useAuthReq()
+  const {isClerkLoaded, isSignedIn} = useAuthReq()
   useUserSync()
 
   if(!isClerkLoaded) return null;
@@ -45,9 +45,9 @@ function App() {
             <Routes>  
               <Route path="/" element ={<HomePage/>}></Route>
               <Route path="/product/:id" element ={<ProductPage/>}></Route>
-              <Route path="/profile" element ={<ProfilePage/>}></Route>
-              <Route path="/create" element ={<CreatePage/>}></Route>
-              <Route path="/edit/:id" element ={<EditProductPage/>}></Route>
+              <Route path="/profile" element ={isSignedIn?<ProfilePage/>: <Navigate to={"/"}/>}></Route>
+              <Route path="/create" element ={isSignedIn? <CreatePage/>: <Navigate to ={"/"}> </Navigate>}></Route>
+              <Route path="/edit/:id" element ={isSignedIn?<EditProductPage/>: <Navigate to={"/"}/>}></Route>
             </Routes>
          </main>
 
