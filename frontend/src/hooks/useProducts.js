@@ -9,10 +9,17 @@ export const useProducts = () => {
 //queryKey is like a reference that we can use in different parts of code to queryFn
 
 
-export const useCreateProduct =() => {
-    const result =useMutation({mutationFn:createProduct})
-    return result;
-}
+export const useCreateProduct = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: createProduct,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["myProducts"] });
+    },
+  });
+};
 
 
 export const useProduct = (id) => {

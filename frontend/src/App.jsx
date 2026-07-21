@@ -6,7 +6,7 @@
 // } from "@clerk/clerk-react";
 import { Routes, Route } from "react-router-dom";
 import { Navigate } from "react-router-dom";
-import Navbar from "./compnents/Navbar";
+import Navbar from "./components/Navbar";
 import ProductPage from "./pages/ProductPage";
 import ProfilePage from "./pages/ProfilePage";
 import CreatePage from "./pages/CreatePage";

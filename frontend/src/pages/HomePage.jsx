@@ -1,9 +1,9 @@
 import { useProducts } from "../hooks/useProducts"
-import LoadingSpinner from "../compnents/LoadingSpinner"
+import LoadingSpinner from "../components/LoadingSpinner"
 import { PackageIcon,SparklesIcon } from "lucide-react"
 import {Link} from 'react-router';
 import { SignInButton } from "@clerk/clerk-react";
-import ProductCard from "../compnents/ProductCard";
+import ProductCard from "../components/ProductCard";
 
 function HomePage() {
 

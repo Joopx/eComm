@@ -57,7 +57,7 @@ export const createProduct = async (req: Request, res: Response) => {
 
     const { title, description, imageUrl } = req.body;
 
-    if (!title || description || imageUrl) {
+    if (!title || !description || !imageUrl) {
       res
         .status(400)
         .json({ error: " Title, description and imageUrl are required" });
