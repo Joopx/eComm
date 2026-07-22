@@ -1,5 +1,25 @@
 {
   "dependencies": {
     "@clerk/express": "^1.7.60"
-  }
+  },
+  "name": "e_comm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "build": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend && npm run build --prefix backend",
+    "start": "npm run db:push --prefix backend && run start --prefix backend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Joopx/eComm.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Joopx/eComm/issues"
+  },
+  "homepage": "https://github.com/Joopx/eComm#readme"
 }
