@@ -41,6 +41,7 @@ export const useDeleteProduct = () => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["myProducts"] });
+      queryClient.invalidateQueries({ queryKey: ["products"] });
     },
   });
 };

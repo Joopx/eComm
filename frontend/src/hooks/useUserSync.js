@@ -1,27 +1,35 @@
-import {useAuth, useUser} from "@clerk/clerk-react";
-import {useMutation} from "@tanstack/react-query";
-import { useEffect } from "react";
-import {syncUser} from "../lib/api";
+import { useAuth, useUser } from "@clerk/clerk-react";
+import { useMutation } from "@tanstack/react-query";
+import { useEffect, useRef } from "react";
+import { syncUser } from "../lib/api";
 
 function useUserSync() {
+  const { isSignedIn } = useAuth();
+  const { user } = useUser();
+  const hasSyncedRef = useRef(false);
 
-    const {isSignedIn} = useAuth();
-    const {user} = useUser() ;
+  const { mutate: syncUserMutation, isPending, isSuccess } = useMutation({
+    mutationFn: syncUser,
+  });
 
-    //mutation when we want to create smtg , for fetching useQuery
-    const {mutate:syncUserMutation, isPending, isSuccess} = useMutation({mutationFn:syncUser})
+  useEffect(() => {
+    if (!isSignedIn || !user || isPending || hasSyncedRef.current) return;
 
-    useEffect(() =>{
-        if(isSignedIn && user && !isPending && !isSuccess){
-            syncUserMutation({
-                email: user.primaryEmailAddress ?.emailAddress,
-                name: user.fullName || user.firstName,
-                imageUrl: user.imageUrl,
-            })
-        }
-    }, [isSignedIn,user,syncUserMutation,isPending,isSuccess])
-        //add these values  ^
-  return { isSynced:isSuccess };
+    syncUserMutation(
+      {
+        email: user.primaryEmailAddress?.emailAddress,
+        name: user.fullName || user.firstName || "User",
+        imageUrl: user.imageUrl || "",
+      },
+      {
+        onSettled: () => {
+          hasSyncedRef.current = true;
+        },
+      }
+    );
+  }, [isSignedIn, user, syncUserMutation, isPending]);
+
+  return { isSynced: isSuccess };
 }
 
-export default useUserSync
+export default useUserSync;

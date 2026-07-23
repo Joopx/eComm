@@ -72,7 +72,7 @@ function ProductPage() {
 
       <div className="card bg-base-300">
         <div className="card-body">
-          <h1 className="card-title text-2xl"></h1>
+          <h1 className="card-title text-2xl">{product.title}</h1>
           <div className="flex flex-wrap gap-4 text-sm text-base-content/60 my-2">
             <div className="flex items-center gap-1">
               <CalendarIcon className="size-4" />

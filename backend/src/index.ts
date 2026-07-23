@@ -3,11 +3,10 @@ import {ENV} from "./config/env"
 import path from "path"
 import {clerkMiddleware} from "@clerk/express";
 import cors from "cors";
-import { User } from "./db/schema";
 import userRoutes from "./routes/userRoutes";
 import productRoutes from "./routes/productRoutes";
-import commentRoutes from "./routes//commentRoutes";
-
+import commentRoutes from "./routes/commentRoutes";
+import { Request,Response } from "express";
 const app = express();
 
 
@@ -17,7 +16,7 @@ app.use(clerkMiddleware()); // auth obj will be attched to the req
 app.use(express.json()); //parses JSON req bodies
 app.use(express.urlencoded({extended:true})); // parses form data(html forms)
 
-app.get("/api/health", (req,res)=>{
+app.get("/api/health", (req:Request,res:Response)=>{
 
      
     res.json({
@@ -37,13 +36,11 @@ app.use("/api/comments",commentRoutes);
 
 
 if(ENV.NODE_ENV === "production"){
-    const __dirname = path.resolve();
-    //serve static files from frontend/dist
-    app.use(express.static(path.join(__dirname,"../frontend/dist")));
+    const frontendDist = path.join(__dirname, "../../frontend/dist");
+    app.use(express.static(frontendDist));
 
-    //handle SPA routing - send all non API routes to indexhtml - react app
-    app.get("/{*any}",(req,res)=>{
-        res.sendFile(path.join(__dirname, "../frontend/dist/index"))
+    app.get("/{*any}",(_req,res)=>{
+        res.sendFile(path.join(frontendDist, "index.html"));
     });
 }
 app.listen(ENV.PORT,()=>

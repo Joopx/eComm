@@ -22,7 +22,7 @@ export const products = pgTable("products",{
             .notNull()
             .references(()=> users.id,{onDelete: "cascade"}), // cascade would del all the children as well 
       createdAt: timestamp("created_at", {mode: "date"}).notNull().defaultNow(),
-    updatedAt: timestamp("updated_at",{mode: "date"}).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at",{mode: "date"}).notNull().defaultNow().$onUpdate(()=>new Date()),
 });
 
 
@@ -43,7 +43,7 @@ export const comments = pgTable("comments",{
 //user can have many products and comments
 //many() means 1 user can have multiple records 
 
-export const usserRelations = relations(users,({many})=>({
+export const userRelations = relations(users,({many})=>({
     products: many(products),
     comments: many(comments),
 }));

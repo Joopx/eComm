@@ -33,7 +33,7 @@ export const updateUser = async (id: string, data: Partial<NewUser>) => {
     .set(data)
     .where(eq(users.id, id))
     .returning();
-  return users;
+  return user;
 };
 
 //upsert either creates or updates
@@ -57,8 +57,8 @@ export const createProduct = async (data: NewProduct) => {
 
 export const getAllProducts = async () => {
   return db.query.products.findMany({
-    with: { user: true }, //fetch user data alongside user associated data
-    orderBy: (products, { desc }) => [desc(products.createdAt)], //latest prod first , [] are req because drizzle orms orderby expects an array even for a single column
+    with: { user: true, comments: true },
+    orderBy: (products, { desc }) => [desc(products.createdAt)],
   });
 };
 //using user details we can fetch all the product
@@ -122,9 +122,9 @@ export const createComment = async (data: NewComment) => {
 };
 
 export const deleteComment = async (id: string) => {
- const existingProduct = await getProductById(id);
-  if(!existingProduct){
-    throw new Error(`Product with id ${id} not found`);
+  const existingComment = await getCommentById(id);
+  if (!existingComment) {
+    throw new Error(`Comment with id ${id} not found`);
   }
  
     const [comment] = await db

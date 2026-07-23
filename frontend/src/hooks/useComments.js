@@ -6,7 +6,7 @@ export const useCreateComment = () => {
     const queryClient = useQueryClient()
     return useMutation({mutationFn: createComment,
         onSuccess: (_,variables)=>{
-            queryClient.invalidateQueries ({querKey: ["product", variables.productId]});
+            queryClient.invalidateQueries({ queryKey: ["product", variables.productId] });
         },
     })
 }

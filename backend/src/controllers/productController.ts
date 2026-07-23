@@ -1,8 +1,6 @@
 import type { Request, Response } from "express";
 import * as queries from "../db/queries";
 import { getAuth } from "@clerk/express";
-import { error } from "node:console";
-import { desc } from "drizzle-orm";
 
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
@@ -72,8 +70,8 @@ export const createProduct = async (req: Request, res: Response) => {
     });
     res.status(201).json(product);
   } catch (error) {
-    console.error("Error getting user products:", error);
-    res.status(500).json({ error: "Failed to get user products" });
+    console.error("Error creating product:", error);
+    res.status(500).json({ error: "Failed to create product" });
   }
 };
 

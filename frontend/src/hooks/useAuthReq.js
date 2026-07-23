@@ -1,19 +1,18 @@
 import { useAuth } from "@clerk/clerk-react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import api from "../lib/axios";
 
-let isInterceptorRegistered = false;
-//better to implement web hooks , this one is beginner type
 function useAuthReq() {
-  //IMPORTATNT STEP TO VERIFY IF USER IS AUTHENTICATED OR NOT UNDER THE BACKEND
   const { isSignedIn, getToken, isLoaded } = useAuth();
+  const authRef = useRef({ isSignedIn, getToken });
 
-  //include token to req headers, interceptor is from axios , its there in docs
   useEffect(() => {
-    if (isInterceptorRegistered) return;
-    isInterceptorRegistered = true;
+    authRef.current = { isSignedIn, getToken };
+  }, [isSignedIn, getToken]);
 
+  useEffect(() => {
     const interceptor = api.interceptors.request.use(async (config) => {
+      const { isSignedIn, getToken } = authRef.current;
       if (isSignedIn) {
         const token = await getToken();
         if (token) {
@@ -22,11 +21,11 @@ function useAuthReq() {
       }
       return config;
     });
+
     return () => {
-      api.interceptors.request.eject(interceptor);  //removes inerceptor when no longer used 
-      isInterceptorRegistered = false;
+      api.interceptors.request.eject(interceptor);
     };
-  }, [isSignedIn, getToken]);
+  }, []);
 
   return {
     isSignedIn,
