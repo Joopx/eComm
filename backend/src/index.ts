@@ -1,47 +1,47 @@
 import express from "express";
-import {ENV} from "./config/env"
-import path from "path"
-import {clerkMiddleware} from "@clerk/express";
 import cors from "cors";
+import path from "path";
+
+import { ENV } from "./config/env";
+import { clerkMiddleware } from "@clerk/express";
+
 import userRoutes from "./routes/userRoutes";
 import productRoutes from "./routes/productRoutes";
 import commentRoutes from "./routes/commentRoutes";
-import { Request,Response } from "express";
+
 const app = express();
 
+app.use(cors({ origin: ENV.FRONTEND_URL, credentials: true }));
+// `credentials: true` allows the frontend to send cookies to the backend so that we can authenticate the user.
+app.use(clerkMiddleware()); // auth obj will be attached to the req
+app.use(express.json()); // parses JSON request bodies.
+app.use(express.urlencoded({ extended: true })); // parses form data (like HTML forms).
 
-//credentials true allows the frontend to send cookies to the backend so that we can authenticate the user.
-app.use(cors({origin:ENV.FRONTEND_URL, credentials:true}));
-app.use(clerkMiddleware()); // auth obj will be attched to the req
-app.use(express.json()); //parses JSON req bodies
-app.use(express.urlencoded({extended:true})); // parses form data(html forms)
-
-app.get("/api/health", (req:Request,res:Response)=>{
-
-     
-    res.json({
-        message: "Welcom to ecomm API done using PERN stack",
-        endpoints:{
-            users: '/api/users',
-            products: '/api/products',
-            comments: '/api/comments',
-        },
-    });
+app.get("/api/health", (req, res) => {
+  res.json({
+    message: "Welcome to eComm API - Powered by PostgreSQL, Drizzle ORM & Clerk Auth",
+    endpoints: {
+      users: "/api/users",
+      products: "/api/products",
+      comments: "/api/comments",
+    },
+  });
 });
 
+app.use("/api/users", userRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/comments", commentRoutes);
 
-app.use("/api/users",userRoutes);
-app.use("/api/products",productRoutes);
-app.use("/api/comments",commentRoutes);
+if (ENV.NODE_ENV === "production") {
+  const __dirname = path.resolve();
 
+  // serve static files from frontend/dist
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
-if(ENV.NODE_ENV === "production"){
-    const frontendDist = path.join(__dirname, "../../frontend/dist");
-    app.use(express.static(frontendDist));
-
-    app.get("/{*any}",(_req,res)=>{
-        res.sendFile(path.join(frontendDist, "index.html"));
-    });
+  // handle SPA routing - send all non-API routes to index.html - react app
+  app.get("/{*any}", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+  });
 }
-app.listen(ENV.PORT,()=>
-    console.log(`Listening on Port:${ENV.PORT}`));
+
+app.listen(ENV.PORT, () => console.log("Server is up and running on PORT:", ENV.PORT));

@@ -40,7 +40,7 @@ function ThemeSelector() {
   const [theme, setTheme] = useState(() => {
    //if page has loaded 
     if (typeof window !== "undefined") {
-      return localStorage.getItem("theme") || "cmyk";
+      return localStorage.getItem("theme") || "lemonade";
     }
     return "forest";
   });
